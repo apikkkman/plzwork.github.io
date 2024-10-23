@@ -177,11 +177,23 @@
 
     <input id="num1" />
     <select name="goods" id="good">
-      <option value="Chair">Стул</option>
-      <option value="Armchair">Кресло</option>
-      <option value="Sofa">Диван</option>
+      <option value="Chair" id="Chair">Стул</option>
+      <option value="Armchair" id="Armchair">Кресло</option>
+      <option value="Sofa" id="Sofa">Диван</option>
     </select>
-    <script src='JavaScript.js';></script>
+    <div class="checks" id="checks"><p name="checks" > <b>Опции:</b> </p>
+    <input type="checkbox" name="checks" value="stronger" id="check1" style="display:none"> Дополнительная упаковка<br>
+    <input type="checkbox" name="checks" value="instruments" id="check2" style="display:none"> Инструменты в комплекте<br><br><br></div>
+
+    <p name="radios"> <b>Услуги:</b> </p>
+    <div class="services" id="services">
+      <input id="not_at_all" name="services" type="radio" value="self" style="display:none"> Самовывоз <br>
+      <input id="not_all" name="services" type="radio" value="delivery" style="display:none"> Доставка до дома <br>
+      <input id="all" name="services" type="radio" value="all_included" style="display:none"> Доставка на дом и сборка 
+    </div>
+
+    <script src='JavaScript.js';></script><br><br>
+    
     <button onclick="count()">Посчитать</button>
     <p id="result"></p>
 
