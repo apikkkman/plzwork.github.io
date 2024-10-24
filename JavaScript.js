@@ -4,6 +4,9 @@ window.addEventListener('DOMContentLoaded', function (event) {
     console.log("DOM fully loaded and parsed");
   });
 
+  let k1=0, k2=0;
+  var num3=1;
+  let flag;
 let s = document.getElementsByName("goods");
 s[0].addEventListener("change", function(event) {
     let select = event.target;
@@ -14,11 +17,17 @@ s[0].addEventListener("change", function(event) {
     let check2 = document.getElementById("check2");
     if (select.value == "Chair") 
     {
-        service1.style.display = "none";
+        service1.style.display = "none"; 
         service2.style.display = "none";
         service3.style.display = "none";
         check1.style.display = "none";
         check2.style.display = "none";
+        check1.checked=false;
+        check2.checked=false;
+        document.getElementById("not_at_all").checked = false;
+        document.getElementById("not_all").checked = false;
+        document.getElementById("all").checked = false;
+        k1 = 0; k2 = 0, flag="Chair";
     }
     if (select.value=="Armchair") 
     {
@@ -27,6 +36,12 @@ s[0].addEventListener("change", function(event) {
         service3.style.display = "none";
         check1.style.display = "inline";
         check2.style.display = "inline";
+        check1.checked=false;
+        check2.checked=false;
+        document.getElementById("not_at_all").checked = false;
+        document.getElementById("not_all").checked = false;
+        document.getElementById("all").checked = false;
+        k1 = 0; k2 = 0, flag="Armchair";
     }
     if (select.value=="Sofa")
     {
@@ -35,8 +50,33 @@ s[0].addEventListener("change", function(event) {
         service3.style.display = "inline";
         check1.style.display = "none";
         check2.style.display = "none";
+        check1.checked=false;
+        check2.checked=false;
+        document.getElementById("not_at_all").checked = false;
+        document.getElementById("not_all").checked = false;
+        document.getElementById("all").checked = false;
+        k1 = 0; k2 = 0, flag="Sofa";
     }
     });
+    checks.onclick = function()
+  {
+      if (check1.checked)
+      {
+          k1 = 300;
+      }
+      if (check2.checked)
+      {
+          k2 = 2000;
+      }
+      if (!check1.checked)
+      {
+          k1 = 0;
+      }
+      if (!check2.checked)
+      {
+          k2 = 0;
+      }
+  }
 
 let g, h;
 let r = document.querySelectorAll(".services input[type=radio]");
@@ -47,26 +87,6 @@ let r = document.querySelectorAll(".services input[type=radio]");
     });    
   });
 
-let k1 = 0, k2 = 0;
-checks.onclick = function()
-{
-    if (check1.checked)
-    {
-        k1 = 100;
-    }
-    if (check2.checked)
-    {
-        k2 = 2000;
-    }
-    if (!check1.checked)
-    {
-        k1 = 0;
-    }
-    if (!check2.checked)
-    {
-        k2 = 0;
-    }
-}
 function count()
 {
     var num1 = Number(document.getElementById("num1").value);
@@ -89,12 +109,12 @@ function count()
         return 0;
     }
     var good = (document.getElementById("good").value);
-    var num2, num3, result;
+    var num2, result;
     switch(good)
     {
         case "Chair": num2 = 5000; break;
-        case "Armchair": num2 = 15000; k1*=2; break;
-        case "Sofa": num2 = 50000; k1*=3; break;
+        case "Armchair": num2 = 15000; break;
+        case "Sofa": num2 = 50000; break;
     }
     switch(g)
     {
@@ -105,8 +125,13 @@ function count()
     }
     console.log(typeof num1);
     console.log(" r = " + r);
-    
+    switch(flag)
+    {
+        case "Chair": num3 = 1; break;
+        case "Armchair": num3 = 1; break;
+        case "Sofa": break;
+    }
     result = num1*num2*num3+k1+k2;
-    console.log(result);
+    console.log("Все переменные: " + num1 + " " + num2 + " " + num3 + " " + k1 + " " + k2);
     document.getElementById("result").innerHTML = result;
 }
