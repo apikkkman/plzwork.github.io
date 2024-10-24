@@ -1,5 +1,9 @@
 console.log("Файл прочтён");
 
+window.addEventListener('DOMContentLoaded', function (event) {
+    console.log("DOM fully loaded and parsed");
+  });
+
 let s = document.getElementsByName("goods");
 s[0].addEventListener("change", function(event) {
     let select = event.target;
