@@ -60,6 +60,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-left: -10px;
     }
 
   .arrow {
@@ -89,8 +90,8 @@
 
   @media (max-width: 600px) {
     .gallery img {
-      width: 70px;
-      height: 70px;
+      width: 100%;
+      height: 100%;
       margin: 0;
      }
    }
@@ -147,7 +148,49 @@
     </div>
     <span class="arrow" onclick="moveLeft()">&#9664;</span>
     <span class="arrow" onclick="moveRight()">&#9654;</span>
-    <script src='JavaScript2.js';></script>
+    <script>const gallery = document.getElementById('gallery');
+      const images = gallery.getElementsByTagName('img');
+      let currentIndex = 1; // Индекс для отображения центрального изображения вначале (начиная со второго)
+    
+      function updateGallery() {
+        // Убираем класс active у всех изображений
+        for (let img of images) {
+          img.classList.remove('active');
+        }
+        // Добавляем класс active трем видимым изображениям (или одной на мобильных устройствах)
+        images[currentIndex].classList.add('active');
+        if (window.innerWidth > 600) {
+          if (currentIndex > 0) images[currentIndex - 1].classList.add('active');
+          if (currentIndex < images.length - 1) images[currentIndex + 1].classList.add('active');
+        }
+    
+        // Сдвигаем галерею так, чтобы нужная тройка или одиночное изображение отображались по центру
+        if (currentIndex!=0 && currentIndex!=7) {const offset = -(currentIndex - (window.innerWidth > 600 ? 1 : 0)) * (images[0].width + 1);
+            gallery.style.transform = `translateX(${offset}px)`;}
+      }
+    
+      function moveLeft() {
+        if (currentIndex > 0) {
+          currentIndex--;
+        } else {
+          currentIndex = 0; // Для случая крайнего левого
+        }
+        updateGallery();
+      }
+    
+      function moveRight() {
+        if (currentIndex < images.length - 1) {
+          currentIndex++;
+        } else {
+          currentIndex = images.length - 1; // Для случая крайнего правого
+        }
+        updateGallery();
+      }
+    
+      updateGallery(); // Инициализация отображения
+    
+      // Обновление галереи при изменении размера окна
+      window.addEventListener('resize', updateGallery);</script>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     3. <a href="https://avatars.mds.yandex.net/i?id=c406d581abe629969e42fc12e434e5e57693d337-5661135-images-thumbs&n=13"><img src="https://avatars.mds.yandex.net/i?id=5cbce8ed6060e9590ca6d2883eee2897_l-5234286-images-thumbs&n=13" alt="скример"></a><br>
     <div class="pb-4">4. <a href="https://tinyurl.com/ycx67m36"title="МГУ">МГУ</a> (здесь используется margin)</div><br>
