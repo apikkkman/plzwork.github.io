@@ -22,8 +22,8 @@ const gallery = document.getElementById('gallery');
     }
 
     // Сдвигаем галерею так, чтобы нужная тройка или одиночное изображение отображались по центру
-    const offset = -(currentIndex - (window.innerWidth > 600 ? 1 : 0)) * (images[0].width + 10);
-    gallery.style.transform = `translateX(${offset}px)`;
+    if (currentIndex!=0 && currentIndex!=7) {const offset = -(currentIndex - (window.innerWidth > 600 ? 1 : 0)) * (images[0].width + 10);
+        gallery.style.transform = `translateX(${offset}px)`;}
   }
 
   function moveLeft() {
