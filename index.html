@@ -55,6 +55,46 @@
       text-decoration: none; 
     } 
     
+    
+    .gallery-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    }
+
+  .arrow {
+    font-size: 24px;
+    cursor: pointer;
+    user-select: none;
+    padding: 0 10px;
+   }
+
+  .gallery {
+    display: flex;
+    transition: transform 0.3s ease;
+    }
+
+  .gallery img {
+    width: 100px;
+    height: 100px;
+    margin: 0 5px;
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+   }
+
+  .gallery img.active {
+    opacity: 1;
+    border: 2px solid #333;
+   }
+
+  @media (max-width: 600px) {
+    .gallery img {
+      width: 70px;
+      height: 70px;
+      margin: 0;
+     }
+   }
+    
     </style> 
 </head>
 <body>
@@ -93,6 +133,21 @@
     1. <a href="http://kubsu.ru/"title="Официальный сайт Кубанского государственного университета">КубГУ</a><br>
     2. <a href="https://kubsu.ru/"title="Официальный сайт Кубанского государственного университета">КубГУ</a><br>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    <div class="gallery-container">
+      <div class="gallery" id="gallery">
+        <img src="https://avatars.mds.yandex.net/i?id=b6739bd1c35c9603bce3ca6149ae3a04091f2cae-10637415-images-thumbs&n=13" alt="1">
+        <img src="https://avatars.mds.yandex.net/i?id=ffd936634e738ba6c2125472a6ba04eee4fdfe81-11549492-images-thumbs&n=13" alt="2">
+        <img src="https://avatars.mds.yandex.net/i?id=7c4c21a78646e4e5ab1e7619b9a16c28968f26f5-10640589-images-thumbs&n=13" alt="3">
+        <img src="https://avatars.mds.yandex.net/i?id=71a9dc05d2cc716fbc4d919a68b449269fc1f6e5-12387244-images-thumbs&n=13" alt="4">
+        <img src="https://avatars.mds.yandex.net/i?id=6d63867ce125a919ab022b107e452c06b62cb323eefa549e-12822619-images-thumbs&n=13" alt="5">
+        <img src="https://avatars.mds.yandex.net/i?id=230e62e5b6ba2b75c71ca0a73931b0578a4f6da7-12900482-images-thumbs&n=13" alt="6">
+        <img src="https://avatars.mds.yandex.net/i?id=598a18646df5837a200367751a5804fa7eaa2ac3-11959565-images-thumbs&n=13" alt="7">
+        <img src="https://avatars.mds.yandex.net/i?id=10bc1addb3da72ee57d8b3f5c2c8ad97c3eb4cd4-2834022-images-thumbs&n=13" alt="8"></img>
+      </div>
+    </div>
+    <span class="arrow" onclick="moveLeft()">&#9664;</span>
+    <span class="arrow" onclick="moveRight()">&#9654;</span>
+    <script src='JavaScript2.js';></script>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     3. <a href="https://avatars.mds.yandex.net/i?id=c406d581abe629969e42fc12e434e5e57693d337-5661135-images-thumbs&n=13"><img src="https://avatars.mds.yandex.net/i?id=5cbce8ed6060e9590ca6d2883eee2897_l-5234286-images-thumbs&n=13" alt="скример"></a><br>
     <div class="pb-4">4. <a href="https://tinyurl.com/ycx67m36"title="МГУ">МГУ</a> (здесь используется margin)</div><br>
