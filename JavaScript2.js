@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', function (event)
 const gallery = document.getElementById('gallery');
   const images = gallery.getElementsByTagName('img');
   let currentIndex = 1; // Индекс для отображения центрального изображения вначале (начиная со второго)
-
+  if (window.innerWidth < 600) currentIndex-=1;
   function updateGallery() {
     // Убираем класс active у всех изображений
     for (let img of images) {
@@ -22,7 +22,7 @@ const gallery = document.getElementById('gallery');
     }
 
     // Сдвигаем галерею так, чтобы нужная тройка или одиночное изображение отображались по центру
-    if (currentIndex!=0) {const offset = -(currentIndex - (window.innerWidth > 600 ? 1 : 0)) * (images[0].width + 100%);
+    if (currentIndex!=0 || (currentIndex==0 && window.innerWidth < 600)) {const offset = -(currentIndex - (window.innerWidth > 600 ? 1 : 0)) * (images[0].width + 100%);
         gallery.style.transform = `translateX(${offset}px)`;}
   }
 
