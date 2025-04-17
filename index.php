@@ -1,77 +1,96 @@
 <?php
-// Устанавливаем соединение с базой данных
-$host = 'localhost';
-$dbname = 'u68672';
-$username = 'u68672';
-$password = '5722731';
-$dsn = "mysql:host=$host;dbname=$dbname;charset=utf8";
+session_start();
 
-try {
-    $pdo = new PDO($dsn, $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Ошибка подключения к БД: " . $e->getMessage());
+// Функция для очистки данных
+function cleanInput($data) {
+    return htmlspecialchars(trim($data));
 }
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $errors = [];
-    if (!empty($errors)) {
-        echo "<h2>Ошибки:</h2><ul>";
-        foreach ($errors as $error) {
-            echo "<li>$error</li>";
-        }
-        echo "</ul>";
-        exit;
-    }
-    try {
-        $pdo->beginTransaction();
-        $stmt = $pdo->prepare("INSERT INTO applications (full_name, phone, email, birthdate, gender, biography, agreement)
-                      VALUES (:name, :phone, :email, :birthdate, :gender, :bio, :contract)");
-        $stmt->execute([
-            ':name' => $_POST['name'],
-            ':phone' => $_POST['phone'],
-            ':email' => $_POST['email'],
-            ':birthdate' => $_POST['birthdate'],
-            ':gender' => $_POST['gender'],
-            ':bio' => $_POST['bio'],
-            ':contract' => isset($_POST['contract_accepted']) ? 1 : 0
-        ]);
-        $applicationId = $pdo->lastInsertId();
-$validLanguages = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskell', 'Clojure', 'Prolog', 'Scala'];
-$selectedLanguages = array_intersect($_POST['languages'] ?? [], $validLanguages);
 
-if (!empty($selectedLanguages)) {
-    $placeholders = rtrim(str_repeat('?,', count($selectedLanguages)), ',');
-    $stmt = $pdo->prepare("SELECT id, name FROM languages WHERE name IN ($placeholders)");
-    $stmt->execute($selectedLanguages);
-    $existingLanguages = $stmt->fetchAll(PDO::FETCH_KEY_PAIR);
-    $missingLanguages = array_diff($selectedLanguages, array_keys($existingLanguages));
-    if (!empty($missingLanguages)) {
-        $stmt = $pdo->prepare("INSERT IGNORE INTO languages (name) VALUES (?)");
-        foreach ($missingLanguages as $lang) {
-            $stmt->execute([$lang]);
-            if ($stmt->rowCount() > 0) {
-                $existingLanguages[$lang] = $pdo->lastInsertId();
-            } else {
-                $stmtSelect = $pdo->prepare("SELECT id FROM languages WHERE name = ?");
-                $stmtSelect->execute([$lang]);
-                $existingLanguages[$lang] = $stmtSelect->fetchColumn();
-            }
-        }
-    }
+// Регулярные выражения для валидации
+$namePattern = "/^[a-zA-Zа-яА-ЯёЁ\s]+$/u"; // Имя: только буквы и пробелы
+$emailPattern = "/^[\w\.-]+@[\w\.-]+\.\w+$/"; // Email: стандартный формат
+$phonePattern = "/^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/"; // Номер телефона: +7 (999) 999-99-99
+$datePattern = "/^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/"; // Дата рождения: YYYY-MM-DD
+$bioPattern = "/^[a-zA-Zа-яА-ЯёЁ0-9\s.,!?;:'\"-]*$/u"; // Биография: буквы, цифры и некоторые знаки
 
-    $stmt = $pdo->prepare("INSERT IGNORE INTO application_languages (application_id, language_id) VALUES (?, ?)");
-    foreach ($existingLanguages as $langId) {
-        $stmt->execute([$applicationId, $langId]);
-    }
+$errors = [];
+$name = cleanInput($_POST['name'] ?? '');
+$email = cleanInput($_POST['email'] ?? '');
+$phone = cleanInput($_POST['phone'] ?? '');
+$date_of_birth = cleanInput($_POST['date_of_birth'] ?? '');
+$gender = $_POST['gender'] ?? '';
+$bio = cleanInput($_POST['bio'] ?? '');
+$options = $_POST['options'] ?? [];
+$agreement = isset($_POST['agreement']) ? true : false;
+
+// Валидация имени
+if (!preg_match($namePattern, $name)) {
+    $errors['name'] = "Имя должно содержать буквы и пробелы.";
 }
-        $pdo->commit();
-        header("Location: index.html?success=1");
-        exit;
-    } catch (PDOException $e) {
-        if ($pdo->inTransaction()) {
-            $pdo->rollBack();
-        }
-        die("Ошибка при сохранении данных: " . $e->getMessage());
-    }
+
+// Валидация email
+if (!preg_match($emailPattern, $email)) {
+    $errors['email'] = "Email должен содержать латинские буквы, @ и цифры.";
 }
+
+// Валидация номера телефона
+if (!preg_match($phonePattern, $phone)) {
+    $errors['phone'] = "Номер телефона в формате +7 (999) 999-99-99.";
+}
+
+// Валидация даты рождения
+if (!preg_match($datePattern, $date_of_birth)) {
+    $errors['date_of_birth'] = "Введите дату рождения.";
+}
+
+// Валидация пола
+if (empty($gender)) {
+    $errors['gender'] = "Выберите пол.";
+}
+
+// Валидация биографии
+if (!preg_match($bioPattern, $bio)) {
+    $errors['bio'] = "Биография может содержать только буквы, цифры и знаки препинания.";
+}
+
+// Валидация множественного выбора
+if (empty($options)) {
+    $errors['options'] = "Выберите хотя бы один язык программирования.";
+}
+if (!$agreement) {
+    $errors['agreement'] = "Вы должны поставить галочку.";
+}
+
+// Если есть ошибки, сохраняем их в Cookies и перенаправляем обратно
+if (!empty($errors)) {
+    foreach ($errors as $field => $error) {
+        setcookie("{$field}_error", $error, 0, "/");
+    }
+    setcookie("name", $name, 0, "/");
+    setcookie("email", $email, 0, "/");
+    setcookie("phone", $phone, 0, "/");
+    setcookie("date_of_birth", $date_of_birth, 0, "/");
+    setcookie("gender", $gender, 0, "/");
+    setcookie("bio", $bio, 0, "/");
+    setcookie('options', serialize($options), 0, "/");
+    setcookie('agreement', $agreement ? '1' : '0', 0, "/");
+
+    // Перенаправляем обратно на форму
+    header("Location: index.php");
+    exit();
+}
+
+// Если ошибок нет, сохраняем данные в Cookies на год
+setcookie("name", $name, time() + (365 * 24 * 60 * 60), "/");
+setcookie("email", $email, time() + (365 * 24 * 60 * 60), "/");
+setcookie("phone", $phone, time() + (365 * 24 * 60 * 60), "/");
+setcookie("date_of_birth", $date_of_birth, time() + (365 * 24 * 60 * 60), "/");
+setcookie("gender", $gender, time() + (365 * 24 * 60 * 60), "/");
+setcookie("bio", $bio, time() + (365 * 24 * 60 * 60), "/");
+setcookie('options', serialize($options), time() + (365 * 24 * 60 * 60), "/");
+setcookie('agreement', $agreement ? '1' : '0', time() + (365 * 24 * 60 * 60), "/");
+
+// Успешная обработка
+header("Location: success.php");
+exit();
 ?>
