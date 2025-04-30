@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $gender = $_POST['gender'];
     $birthdate = $_POST['birthdate'];
-    $biography = $_POST['biography'];
+    $biography = $_POST['biography'] ?? 'Нет биографии';
     $programming_languages = implode(',', $_POST['programming_languages']);
     $consent = isset($_POST['consent']) ? 1 : 0;
     $username = strtolower(substr($name, 0, 3) . rand(100, 999));
