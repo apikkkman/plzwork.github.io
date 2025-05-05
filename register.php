@@ -13,11 +13,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = $_POST['name'];
     $phone = $_POST['phone'];
     $email = $_POST['email'];
-    $sex = $_POST['sex'];
-    $birthday_date = $_POST['birthday_date'];
+    $gender = $_POST['gender'];
+    $birthdate = $_POST['birthdate'];
     $biography = $_POST['biography'];
-    $programming_language = implode(',', $_POST['programming_language']);
-    $checkbox = isset($_POST['checkbox']) ? 1 : 0;
+    $programming_languages = implode(',', $_POST['programming_languages']);
+    $consent = isset($_POST['consent']) ? 1 : 0;
 
     // Генерация логина и пароля
     $username = strtolower(substr($name, 0, 3) . rand(100, 999));
