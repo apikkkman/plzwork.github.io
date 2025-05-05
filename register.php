@@ -2,8 +2,8 @@
 // Подключение к базе данных
 $host = 'localhost';
 $db = 'u68672';
-$user = 'u68672'; // замените на ваше имя пользователя
-$pass = '5722731'; // замените на ваш пароль
+$user = 'u68672'; 
+$pass = '5722731'; 
 
 $pdo = new PDO("mysql:host=$host;dbname=$db", $user, $pass);
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
