@@ -292,10 +292,11 @@
               </form>
             </details>
 
-            <form method="post" action="admin.php" onsubmit="return confirm('Удалить пользователя #<?= htmlspecialchars($id) ?>?');" style="margin-top: 8px;">
-              <input type="hidden" name="user_id" value="<?= htmlspecialchars($id) ?>">
-              <input type="hidden" name="delete" value="1">
-              <button class="btn btn-danger" type="submit">Удалить</button>
+            <form method="post" action="admin.php" onsubmit="return confirm('Удалить заявку #<?= htmlspecialchars($id) ?>?');" style="margin-top: 5px;">
+                  <input type="hidden" name="user_id" value="<?= htmlspecialchars($id) ?>">
+                  <input type="hidden" name="delete" value="1">
+                  <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
+                  <button type="submit">Удалить</button>
             </form>
           </td>
         </tr>
